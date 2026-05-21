@@ -1,0 +1,42 @@
+[features.multi_agent_v2]
+enabled = true
+max_concurrent_threads_per_session = 6
+min_wait_timeout_ms = 1000
+usage_hint_enabled = true
+root_agent_usage_hint_text = "Use spawn_agent, wait_agent, followup_task, send_message, list_agents, and close_agent to coordinate RTL optimization roles. Keep workflow state in syn_flow artifacts, not chat memory."
+subagent_usage_hint_text = "You are a role-scoped RTL optimization subagent. Follow your developer_instructions exactly and communicate durable state only through the filesystem artifacts named by the coordinator."
+
+[agents.rtl_analyzer]
+description = "Analyze RTL timing reports and write iter.json analysis only."
+config_file = "./agents/rtl_analyzer.toml"
+nickname_candidates = ["Analyzer"]
+
+[agents.rtl_optimizer]
+description = "Optimize RTL from iter.json and write target RTL plus optimization notes."
+config_file = "./agents/rtl_optimizer.toml"
+nickname_candidates = ["Optimizer"]
+
+[agents.rtl_evaluator]
+description = "Run exactly one remote synthesis and SEC evaluation command."
+config_file = "./agents/rtl_evaluator.toml"
+nickname_candidates = ["Evaluator"]
+
+[agents.rtl_recorder]
+description = "Parse evaluation outputs and update iter.json evaluation and scoring."
+config_file = "./agents/rtl_recorder.toml"
+nickname_candidates = ["Recorder"]
+
+[agents.rtl_selector]
+description = "Select the best SEC-passing minor and promote it to the next major version."
+config_file = "./agents/rtl_selector.toml"
+nickname_candidates = ["Selector"]
+
+[agents.rtl_memory_archiver]
+description = "Archive completed optimization rounds into raw_memory/attempt_* for self-evolving skill extraction."
+config_file = "./agents/rtl_memory_archiver.toml"
+nickname_candidates = ["Archivist"]
+
+[agents.rtl_skill_extractor]
+description = "Extract reusable successful and failed optimization patterns from raw_memory and update the Codex skill pack."
+config_file = "./agents/rtl_skill_extractor.toml"
+nickname_candidates = ["Extractor"]
